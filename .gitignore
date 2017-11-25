@@ -10,3 +10,4 @@ fact_files/
 log/
 conf/binary_packages.yml
 conf/common_packages.yml
+scripts/dests.json
