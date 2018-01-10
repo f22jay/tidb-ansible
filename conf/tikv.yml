@@ -6,8 +6,15 @@ global:
   # log-level: "info"
 
 server:
+  grpc-concurrency: 4
+  end-point-stream-batch-row-limit: 512
+  end-point-concurrency: 32
+  grpc-concurrency: 2
+
+  addr: "172.16.21.2:500011"
+  advertise-addr: "172.16.21.2:500011"
+
   # set advertise listening address for client communication, if not set, use addr instead.
-  # advertise-addr: ""
   # notify capacity, 40960 is suitable for about 7000 regions.
   # notify-capacity: 40960
   # maximum number of messages can be processed in one tick.

@@ -2,6 +2,7 @@
 # default configuration file for TiDB in yaml format
 
 global:
+  host: "172.16.21.3"
   # TiDB Configuration.
 
   # TiDB server host.
