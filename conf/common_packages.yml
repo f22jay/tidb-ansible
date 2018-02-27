@@ -1,0 +1,25 @@
+---
+
+# must clear for localhost
+ansible_user:
+ansible_become: false
+ansible_connection: local
+
+tidb_packages:
+  - name: tidb
+    version: latest
+    url: http://download.pingcap.org/tidb-latest-linux-amd64-unportable.tar.gz
+  - name: tidb-binlog
+    version: latest
+    url: http://download.pingcap.org/tidb-binlog-latest-linux-amd64.tar.gz
+  - name: tidb-tools
+    version: latest
+    url: http://download.pingcap.org/tidb-tools-latest-linux-amd64.tar.gz
+
+common_packages:
+  - name: fio
+    version: 2.16
+    url: "https://download.pingcap.org/fio-2.16.tar.gz"
+  - name: daemontools
+    version: 0.53
+    url: http://download.pingcap.org/daemontools-0.53.tar.gz
