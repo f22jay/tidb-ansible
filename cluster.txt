@@ -1,0 +1,3 @@
+目前使用的 TiKV 分支是 raftstore-learner-old-proto。这个分支
+保留了 promote 命令，且与 raftstore-learner 的
+2d7e39e861fe2e35617b4abcde5f18a7707183d9 提交同步。
