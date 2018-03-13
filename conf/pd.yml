@@ -47,6 +47,18 @@ schedule:
   #region-schedule-limit: 16
   #replica-schedule-limit: 24
   #tolerant-size-ratio: 2.5
+    enable-raft-learner: true
+    region-schedule-limit: 128
+
+    scheudlers:
+        - type: "balance-leader"
+          args: []
+        - type: "balance-region"
+          args: []
+        - type: "balance-hot-region"
+          args: []
+        - type: "shuffle-region"
+          args: []
 
 replication:
   # The number of replicas for each region.
