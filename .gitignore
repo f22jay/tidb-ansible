@@ -5,3 +5,6 @@ resources/
 fact_files/
 .vagrant/
 *.pyc
+log/*
+conf/binary_packages.yml
+conf/common_packages.yml
