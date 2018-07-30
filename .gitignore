@@ -8,3 +8,5 @@ fact_files/
 log/*
 conf/binary_packages.yml
 conf/common_packages.yml
+conf/keys
+scripts/dests.json
