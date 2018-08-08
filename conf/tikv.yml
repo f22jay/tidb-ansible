@@ -8,15 +8,15 @@ readpool:
   coprocessor:
 
 server:
-  snap-max-write-bytes-per-sec: "10MB"
-  snap-max-total-size: "512MB"
+  snap-max-write-bytes-per-sec: "50MB"
+  snap-max-total-size: "10G"
   concurrent-send-snap-limit: 1024
   concurrent-recv-snap-limit: 1024
 
 storage:
 
 pd:
-  endpoints: ["172.16.10.148:2379"]
+  endpoints: ["172.16.30.186:2379"]
 
 metric:
 
@@ -24,7 +24,7 @@ raftstore:
   snap-gc-timeout: "30m"
   snap-mgr-gc-tick-interval: "1m"
   sync-log: false
-  consistency-check-interval: "10m"
+  consistency-check-interval: "30m"
 
 coprocessor:
 
