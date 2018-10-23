@@ -54,7 +54,7 @@ schedule:
 
 replication:
   # The number of replicas for each region.
-  # max-replicas: 3
+  max-replicas: 3
   # The label keys specified the location of a store.
   # The placement priorities is implied by the order of label keys.
   # For example, ["zone", "rack"] means that we should place replicas to

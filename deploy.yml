@@ -52,13 +52,6 @@
   roles:
     - blackbox_exporter
 
-- name: deploying diagnostic tools
-  hosts: monitored_servers
-  tags:
-    - collect_diagnosis
-  roles:
-    - collect_diagnosis
-
 - name: deploying alertmanager
   hosts: alertmanager_servers
   tags:
@@ -118,14 +111,6 @@
   roles:
     - { role: pump, when: enable_binlog|default(false) }
     - tidb
-    - { role: tispark, when: "(groups.get('spark_master', []) | length == 0 or groups.get('spark_slaves', []) | length == 0) and (deployment_method == 'binary')" }
-
-- name: deploying tispark cluster
-  hosts: spark_master,spark_slaves
-  tags:
-    - tispark
-  roles:
-    - { role: tispark, when: "groups.get('spark_master', []) | length != 0 and groups.get('spark_slaves', []) | length != 0 and deployment_method == 'binary'" }
 
 - name: finalizing deployment target
   hosts: all

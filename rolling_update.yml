@@ -127,8 +127,6 @@
     - include_tasks: "common_tasks/get_store_id_tls.yml"
       when: enable_tls|default(false)
 
-    - include_tasks: "common_tasks/add_evict_leader_scheduler.yml"
-
     - name: stop TiKV by supervise
       shell: cd {{ deploy_dir }}/scripts && ./stop_tikv.sh
       when: process_supervision == 'supervise'
@@ -184,9 +182,6 @@
     - name: display new tikv pid
       debug:
         msg: "tikv binary or docker pid: {{ new_tikv_pid.stdout }}"
-
-    - include_tasks: "common_tasks/remove_evict_leader_scheduler.yml"
-
 
 - name: rolling update TiDB cluster
   hosts: tidb_servers

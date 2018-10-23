@@ -30,9 +30,9 @@ readpool:
   coprocessor:
     # Notice: if CPU_NUM > 8, default thread pool size for coprocessors
     # will be set to CPU_NUM * 0.8.
-    # high-concurrency: 8
-    # normal-concurrency: 8
-    # low-concurrency: 8
+    high-concurrency: 16
+    normal-concurrency: 16
+    low-concurrency: 16
     # max-tasks-per-worker-high: 2000
     # max-tasks-per-worker-normal: 2000
     # max-tasks-per-worker-low: 2000
@@ -49,7 +49,7 @@ server:
   # compression type for grpc channel, available values are none, deflate and gzip.
   # grpc-compression-type: "none"
   # size of thread pool for grpc server.
-  # grpc-concurrency: 4
+  grpc-concurrency: 4
   # The number of max concurrent streams/requests on a client connection.
   # grpc-concurrent-stream: 1024
   # The number of connections with each tikv server to send raft messages.
@@ -77,7 +77,7 @@ server:
   # the max bytes that snapshot can be written to disk in one second,
   # should be set based on your disk performance
   # snap-max-write-bytes-per-sec: "100MB"
-
+  
   # set attributes about this server, e.g. { zone = "us-west-1", disk = "ssd" }.
   # labels: {}
 
@@ -113,7 +113,7 @@ metric:
 
 raftstore:
   # true (default value) for high reliability, this can prevent data loss when power failure.
-  # sync-log: true
+  sync-log: false
 
   # minimizes disruption when a partitioned node rejoins the cluster by using a two phase election.
   # prevote: true
@@ -192,6 +192,7 @@ raftstore:
 
   # Interval to cleanup import sst files.
   # cleanup-import-sst-interval: "10m"
+  raft-max-inflight-msgs: 512
 
 coprocessor:
   # When it is true, it will try to split a region with table prefix if
@@ -392,7 +393,7 @@ rocksdb:
 
     # block-cache used to cache uncompressed blocks, big block-cache can speed up read.
     # in normal cases should tune to 30%-50% system's total memory.
-    # block-cache-size: "1GB"
+    block-cache-size: "16GB"
 
     # Indicating if we'd put index/filter blocks to the block cache.
     # If not specified, each "table reader" object will pre-load index/filter block
@@ -426,7 +427,7 @@ rocksdb:
     # target-file-size-base: "8MB"
 
     # in normal cases should tune to 10%-30% system's total memory.
-    # block-cache-size: "256MB"
+    block-cache-size: "4GB"
     # level0-file-num-compaction-trigger: 4
     # level0-slowdown-writes-trigger: 20
     # level0-stop-writes-trigger: 36
@@ -444,7 +445,7 @@ rocksdb:
     # min-write-buffer-number-to-merge: 1
     # max-bytes-for-level-base: "128MB"
     # target-file-size-base: "8MB"
-    # block-cache-size: "256MB"
+    block-cache-size: "4GB"
     # level0-file-num-compaction-trigger: 1
     # level0-slowdown-writes-trigger: 20
     # level0-stop-writes-trigger: 36
@@ -486,7 +487,7 @@ raftdb:
     # target-file-size-base: "8MB"
 
     # should tune to 256MB~2GB.
-    # block-cache-size: "256MB"
+    block-cache-size: "1GB"
     # level0-file-num-compaction-trigger: 4
     # level0-slowdown-writes-trigger: 20
     # level0-stop-writes-trigger: 36

@@ -48,7 +48,7 @@ log:
   # disable-timestamp: false
 
   # Queries with execution time greater than this value will be logged. (Milliseconds)
-  # slow-threshold: 300
+  slow-threshold: 3000
 
   # Queries with internal result greater than this value will be logged.
   # expensive-threshold: 10000
@@ -95,7 +95,7 @@ status:
 
 performance:
   # Max CPUs to use, 0 use number of CPUs in the machine.
-  # max-procs: 0
+  max-procs: 20
   # StmtCountLimit limits the max count of statement inside a transaction.
   # stmt-count-limit: 5000
 
@@ -109,7 +109,7 @@ performance:
   # stats-lease: "3s"
 
   # Run auto analyze worker on this tidb-server.
-  # run-auto-analyze: true
+  run-auto-analyze: false
 
   # Probability to use the query feedback to update stats, 0 or 1 for always false/true.
   # feedback-probability: 0.05
@@ -190,7 +190,7 @@ opentracing:
 
 tikv_client:
   # Max gRPC connections that will be established with each tikv-server.
-  # grpc-connection-count: 16
+  grpc-connection-count: 32
 
   # After a duration of this time in seconds if the client doesn't see any activity it pings
   # the server to see if the transport is still alive.
@@ -202,6 +202,12 @@ tikv_client:
 
   # max time for commit command, must be twice bigger than raft election timeout.
   # commit-timeout: "41s"
+
+  max-batch-size: 128
+  heavy-load-to-batch: 0
+  tikv-heavy-load-to-batch: 160
+  batch-wait-time: 500000
+  batch-wait-size: 32
 
 txn_local_latches:
   # Enable local latches for transactions. Enable it when
