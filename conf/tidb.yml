@@ -134,8 +134,8 @@ proxy_protocol:
   # header-timeout: 5
 
 prepared_plan_cache:
-  # enabled: false
-  # capacity: 100
+  enabled: true
+  capacity: 1000
 
 opentracing:
   # Enable opentracing.

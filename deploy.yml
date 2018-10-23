@@ -112,20 +112,6 @@
     - { role: pump, when: enable_binlog|default(false) }
     - tidb
 
-- name: deploying tidb-lightning
-  hosts: lightning_server
-  tags:
-    - lightning
-  roles:
-    - tidb_lightning
-
-- name: deploying tikv-importer
-  hosts: importer_server
-  tags:
-    - lightning
-  roles:
-    - tikv_importer
-
 - name: finalizing deployment target
   hosts: all
   become: true

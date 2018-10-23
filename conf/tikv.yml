@@ -386,7 +386,7 @@ rocksdb:
 
     # block-cache used to cache uncompressed blocks, big block-cache can speed up read.
     # in normal cases should tune to 30%-50% system's total memory.
-    block-cache-size: "16GB"
+    block-cache-size: "32GB"
 
     # Indicating if we'd put index/filter blocks to the block cache.
     # If not specified, each "table reader" object will pre-load index/filter block
@@ -420,7 +420,7 @@ rocksdb:
     # target-file-size-base: "8MB"
 
     # in normal cases should tune to 10%-30% system's total memory.
-    block-cache-size: "4GB"
+    block-cache-size: "8GB"
     # level0-file-num-compaction-trigger: 4
     # level0-slowdown-writes-trigger: 20
     # level0-stop-writes-trigger: 36
@@ -438,7 +438,7 @@ rocksdb:
     # min-write-buffer-number-to-merge: 1
     # max-bytes-for-level-base: "128MB"
     # target-file-size-base: "8MB"
-    block-cache-size: "4GB"
+    block-cache-size: "8GB"
     # level0-file-num-compaction-trigger: 1
     # level0-slowdown-writes-trigger: 20
     # level0-stop-writes-trigger: 36
@@ -480,7 +480,7 @@ raftdb:
     # target-file-size-base: "8MB"
 
     # should tune to 256MB~2GB.
-    block-cache-size: "1GB"
+    block-cache-size: "2GB"
     # level0-file-num-compaction-trigger: 4
     # level0-slowdown-writes-trigger: 20
     # level0-stop-writes-trigger: 36
