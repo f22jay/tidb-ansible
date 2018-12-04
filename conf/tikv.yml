@@ -14,7 +14,7 @@ readpool:
 
 server:
   grpc-concurrency: 3
-  heavy-load-threshold: 30
+  heavy-load-threshold: 20
   helper-threadpool-size: 1
 
 storage:
@@ -28,25 +28,32 @@ metric:
 
 raftstore:
   sync-log: false
-  leader-transfer-max-log-gap: 10240
-  raft-max-inflight-msgs: 512
-  # apply-pool-size: 3
-  # store-pool-size: 2
+  leader-transfer-max-log-gap: 1024
+  raft-max-inflight-msgs: 256
+  store-pool-size: 2
+  apply-pool-size: 2
+  raft-log-gc-tick-interval: "3s"
+  perf-context-interval: "100ms"
 
 coprocessor:
   max-tasks-per-worker-normal: 20000
 
 rocksdb:
+  max-sub-compactions: 2
   defaultcf:
-    block-cache-size: "24GB"
+    block-cache-size: "8GB"
   writecf:
-    block-cache-size: "6GB"
+    block-cache-size: "12GB"
   lockcf:
-    block-cache-size: "2GB"
+    block-cache-size: "1GB"
 
 raftdb:
+  max-sub-compactions: 2
   defaultcf:
-    block-cache-size: "2GB"
+    num-levels: 2
+    block-cache-size: "1GB"
+    write-buffer-size: "1GB"
+    min-write-buffer-number-to-merge: 2
 
 security:
 
