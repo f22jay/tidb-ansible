@@ -104,12 +104,18 @@
   roles:
     - tikv
 
+- name: deploying pump cluster
+  hosts: pump_servers
+  tags:
+    - pump
+  roles:
+    - { role: pump, when: enable_binlog|default(false) }
+
 - name: deploying TiDB cluster
   hosts: tidb_servers
   tags:
     - tidb
   roles:
-    - { role: pump, when: enable_binlog|default(false) }
     - tidb
 
 - name: finalizing deployment target
