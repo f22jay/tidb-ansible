@@ -16,6 +16,8 @@ server:
   grpc-concurrency: 3
   heavy-load-threshold: 20
   helper-threadpool-size: 1
+  # grpc-keepalive-time: "0s"
+  # grpc-keepalive-timeout: "0s"
 
 storage:
   scheduler-concurrency: 20480000
@@ -41,9 +43,25 @@ coprocessor:
 rocksdb:
   max-sub-compactions: 2
   defaultcf:
-    block-cache-size: "8GB"
+    block-cache-size: "16GB"
+    #    compression-per-level:
+    #        - "no"
+    #        - "no"
+    #        - "no"
+    #        - "no"
+    #        - "no"
+    #        - "no"
+    #        - "no"
   writecf:
-    block-cache-size: "12GB"
+    block-cache-size: "16GB"
+    #    compression-per-level:
+    #        - "no"
+    #        - "no"
+    #        - "no"
+    #        - "no"
+    #        - "no"
+    #        - "no"
+    #        - "no"
   lockcf:
     block-cache-size: "1GB"
 

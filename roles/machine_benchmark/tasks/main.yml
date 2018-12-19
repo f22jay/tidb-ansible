@@ -24,8 +24,8 @@
     dest: "{{ fio_deploy_dir }}/parse_fio_output.py"
     mode: 0755
 
-- include_tasks: fio_randread.yml
-
-- include_tasks: fio_randread_write.yml
-
-- include_tasks: fio_randread_write_latency.yml
+    # - include_tasks: fio_randread.yml
+    # 
+    # - include_tasks: fio_randread_write.yml
+    # 
+    # - include_tasks: fio_randread_write_latency.yml

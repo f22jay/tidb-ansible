@@ -22,7 +22,7 @@ opentracing:
   reporter:
 
 tikv_client:
-  grpc-connection-count: 4
+  grpc-connection-count: 1
 
   commit-timeout: "60s"
 

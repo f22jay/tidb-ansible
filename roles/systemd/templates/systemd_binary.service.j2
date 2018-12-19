@@ -17,6 +17,7 @@ Restart={{ restart }}
 Restart=always
 {% endif %}
 RestartSec=15s
+LimitCORE=infinity
 {% if disable_send_sigkill|default(false) %}
 SendSIGKILL=no
 {% endif %}

@@ -42,14 +42,3 @@ third_party_packages_under_gfw:
     url: "http://download.pingcap.org/blackbox_exporter-0.12.0.linux-amd64.tar.gz"
 
 
-tispark_packages:
-  - name: spark-2.1.1-bin-hadoop2.7.tgz
-    version: 2.1.1
-    url: http://download.pingcap.org/spark-2.1.1-bin-hadoop2.7.tgz
-    checksum: "sha256:372ac4f73221c07696793101007a4f19e31566d1f0d9bd0e5205b6fb5b45bfc2"
-  - name: tispark-latest.tar.gz
-    version: latest
-    url: http://download.pingcap.org/tispark-latest-linux-amd64.tar.gz
-  - name: tispark-sample-data.tar.gz
-    version: latest
-    url: http://download.pingcap.org/tispark-sample-data.tar.gz
