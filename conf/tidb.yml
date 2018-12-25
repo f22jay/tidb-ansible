@@ -22,16 +22,9 @@ opentracing:
   reporter:
 
 tikv_client:
-  grpc-connection-count: 1
-
-  commit-timeout: "60s"
-
-  max-batch-size: 128
-  tikv-heavy-load-to-batch: 30
-  batch-wait-time: 3000000
-  batch-wait-size: 16
 
 txn_local_latches:
-  enabled: false
+  enabled: true
+  capacity: 2048000
 
 binlog:

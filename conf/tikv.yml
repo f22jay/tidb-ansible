@@ -4,25 +4,11 @@ global:
 
 readpool:
   storage:
-    high-concurrency: 1
-    normal-concurrency: 2
-    low-concurrency: 1
   coprocessor:
-    high-concurrency: 1
-    normal-concurrency: 3
-    low-concurrency: 1
 
 server:
-  grpc-concurrency: 3
-  heavy-load-threshold: 20
-  helper-threadpool-size: 1
-  # grpc-keepalive-time: "0s"
-  # grpc-keepalive-timeout: "0s"
 
 storage:
-  scheduler-concurrency: 20480000
-  scheduler-worker-pool-size: 2
-  scheduler-pending-write-threshold: "1000MB"
 
 pd:
 
@@ -30,38 +16,41 @@ metric:
 
 raftstore:
   sync-log: false
-  leader-transfer-max-log-gap: 1024
-  raft-max-inflight-msgs: 256
   store-pool-size: 2
   apply-pool-size: 2
   raft-log-gc-tick-interval: "3s"
-  perf-context-interval: "100ms"
 
 coprocessor:
   max-tasks-per-worker-normal: 20000
 
 rocksdb:
+  titandb:
+    enabled: true
+    min-blob-size: 128
+    blob-file-compression: "lz4"
+    disable-gc: false
+    max-background-gc: 2
+    min-gc-batch-size: "256MB"
+    max-gc-batch-size: "2GB"
+    blob-cache-size: "8GB"
+    merge_small_file_threshold: "8MB"
   max-sub-compactions: 2
+
   defaultcf:
     block-cache-size: "16GB"
-    #    compression-per-level:
-    #        - "no"
-    #        - "no"
-    #        - "no"
-    #        - "no"
-    #        - "no"
-    #        - "no"
-    #        - "no"
+    titandb:
+      enabled: true
+      min-blob-size: 128
+      blob-file-compression: "lz4"
+      disable-gc: false
+      max-background-gc: 2
+      min-gc-batch-size: "256MB"
+      max-gc-batch-size: "2GB"
+      blob-cache-size: "8GB"
+      merge_small_file_threshold: "8MB"
+
   writecf:
     block-cache-size: "16GB"
-    #    compression-per-level:
-    #        - "no"
-    #        - "no"
-    #        - "no"
-    #        - "no"
-    #        - "no"
-    #        - "no"
-    #        - "no"
   lockcf:
     block-cache-size: "1GB"
 
