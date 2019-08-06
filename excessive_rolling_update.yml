@@ -54,8 +54,58 @@
         - current_version.stdout_lines[0].replace(' ','').split(':')[1] < "v2.0.1"
         - tidb_version >= "v2.1.0" or tidb_version == "latest"
 
+- hosts: pd_servers
+  any_errors_fatal: true
+  serial: 1
+  tags:
+    - pd
+  tasks:
+    - name: Check pd cluster status
+      uri:
+        url: "http://{{ ansible_host }}:{{ pd_client_port }}/pd/health"
+        method: GET
+        return_content: yes
+        status_code: 200
+      register: pd_status
+    - name: Failed when one node of pd is unhealthy
+      fail:
+        msg: "Some pd node is unhealth"
+      when: "'false' in pd_status.content"
+
+- hosts: pd_servers
+  any_errors_fatal: true
+  serial: 1
+  tags:
+    - pd
+  tasks:
+    - name: Get pd leader
+      uri:
+        url: "http://{{ ansible_host }}:{{ pd_client_port }}/pd/api/v1/leader"
+        method: GET
+        return_content: yes
+        status_code: 200
+      register: pd_leader_info
+    - set_fact:
+        pd_leader: "{{ pd_leader_info.json | json_query('client_urls') | regex_replace('^.*//(\\d+.\\d+.\\d+.\\d+:\\d+).*$', '\\1') }}"
+    - name: Get pd follower list
+      add_host:
+        name: "{{ ansible_host }}"
+        groups: pd_servers_followers
+        pd_client_port: "{{ pd_client_port }}"
+        deploy_dir: "{{ deploy_dir }}"
+        pd_peer_port: "{{ pd_peer_port }}"
+      when: ansible_host not in pd_leader
+    - name: Get pd leader list
+      add_host:
+        name: "{{ ansible_host }}"
+        groups: pd_servers_leader
+        pd_client_port: "{{ pd_client_port }}"
+        deploy_dir: "{{ deploy_dir }}"
+        pd_peer_port: "{{ pd_peer_port }}"
+      when: ansible_host in pd_leader
+
 - name: rolling update PD cluster
-  hosts: pd_servers
+  hosts: pd_servers_followers, pd_servers_leader
   any_errors_fatal: true
   serial: 1
   tags:
@@ -255,7 +305,6 @@
         - pump
       when:
         - enable_binlog|default(false)
-        - binlog_version == "cluster"
         - process_supervision == 'supervise'
 
     - name: stop pump by systemd
@@ -263,7 +312,6 @@
       become: true
       when:
         - enable_binlog|default(false)
-        - binlog_version == "cluster"
         - process_supervision == 'systemd'
 
     - name: wait until the pump port is down
@@ -274,17 +322,15 @@
         msg: "the pump port {{ pump_port }} is not down"
       when:
         - enable_binlog|default(false)
-        - binlog_version == "cluster"
 
   roles:
-    - { role: pump_cluster, when: enable_binlog|default(false) and binlog_version == "cluster" }
+    - { role: pump, when: enable_binlog|default(false) }
 
   post_tasks:
     - name: start pump by supervise
       shell: cd {{ deploy_dir }}/scripts && ./start_{{ item }}.sh
       when:
         - enable_binlog|default(false)
-        - binlog_version == "cluster"
         - process_supervision == 'supervise'
       with_items:
         - pump
@@ -294,7 +340,6 @@
       become: true
       when:
         - enable_binlog|default(false)
-        - binlog_version == "cluster"
         - process_supervision == 'systemd'
 
     - name: wait until the pump port is up
@@ -305,7 +350,6 @@
         msg: "the pump port {{ pump_port }} is not up"
       when:
         - enable_binlog|default(false)
-        - binlog_version == "cluster"
 
 
 - name: rolling update TiDB cluster
@@ -332,64 +376,10 @@
         state: stopped
         msg: "the TiDB port {{ tidb_port }} is not down"
 
-    - name: stop pump by supervise
-      shell: cd {{ deploy_dir }}/scripts && ./stop_{{ item }}.sh
-      when:
-        - enable_binlog|default(false)
-        - binlog_version == "kafka"
-        - process_supervision == 'supervise'
-      with_items:
-        - pump
-
-    - name: stop pump by systemd
-      systemd: name=pump-{{ pump_port }}.service state=stopped
-      become: true
-      when:
-        - enable_binlog|default(false)
-        - binlog_version == "kafka"
-        - process_supervision == 'systemd'
-
-    - name: wait until the pump port is down
-      wait_for:
-        host: "{{ ansible_host }}"
-        port: "{{ pump_port }}"
-        state: stopped
-        msg: "the pump port {{ pump_port }} is not down"
-      when:
-        - enable_binlog|default(false)
-        - binlog_version == "kafka"
-
   roles:
-    - { role: pump_kafka, when: enable_binlog|default(false) and binlog_version == "kafka" }
     - { role: tidb }
 
   post_tasks:
-    - name: start pump by supervise
-      shell: cd {{ deploy_dir }}/scripts && ./start_{{ item }}.sh
-      when:
-        - enable_binlog|default(false)
-        - binlog_version == "kafka"
-        - process_supervision == 'supervise'
-      with_items:
-        - pump
-
-    - name: start pump by systemd
-      systemd: name=pump-{{ pump_port }}.service state=started enabled=no
-      become: true
-      when:
-        - enable_binlog|default(false)
-        - binlog_version == "kafka"
-        - process_supervision == 'systemd'
-
-    - name: wait until the pump port is up
-      wait_for:
-        host: "{{ ansible_host }}"
-        port: "{{ pump_port }}"
-        state: started
-        msg: "the pump port {{ pump_port }} is not up"
-      when:
-        - enable_binlog|default(false)
-        - binlog_version == "kafka"
 
     - name: start TiDB by supervise
       shell: cd {{ deploy_dir }}/scripts && ./start_tidb.sh
