@@ -1,5 +1,8 @@
 ---
 
+- name: test0
+  shell: sleep 100
+
 - name: remove evict-leader-scheduler
   uri:
     url: "http://{{ pd_addr }}/pd/api/v1/schedulers/evict-leader-scheduler-{{ store_id }}"

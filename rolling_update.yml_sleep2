@@ -194,6 +194,9 @@
       shell: cd {{ deploy_dir }}/scripts && ./start_tikv.sh
       when: process_supervision == 'supervise'
 
+    - name: test2
+      shell: sleep 100
+
     - name: start TiKV by systemd
       systemd: name=tikv-{{ tikv_port }}.service state=started
       become: true
