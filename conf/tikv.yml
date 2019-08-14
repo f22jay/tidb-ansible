@@ -15,14 +15,14 @@ readpool:
 server:
   grpc-concurrency: 3
   grpc-raft-conn-num: 1
-  heavy-load-threshold: 100
+  heavy-load-threshold: 60
 
 storage:
   scheduler-worker-pool-size: 2
 
   block-cache:
     shared: true
-    capacity: "20GB"
+    capacity: "16GB"
 
 pd:
 
@@ -31,7 +31,9 @@ metric:
 raftstore:
   apply-pool-size: 3
   store-pool-size: 3
-  messages-per-tick: 127
+  messages-per-tick: 1023
+  store-max-batch-size: 1024
+  apply-max-batch-size: 16
 
 coprocessor:
   region-max-size: "144MB"
@@ -55,7 +57,11 @@ rocksdb:
     compression-per-level: ["zstd", "zstd", "zstd", "zstd", "zstd", "zstd", "zstd"]
 
 raftdb:
+  wal-bytes-per-sync: "4MB"
   defaultcf:
+    max-write-buffer-number: 5
+    min-write-buffer-number-to-merge: 2
+    write-buffer-size: "1GB"
 
 security:
 import:

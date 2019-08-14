@@ -86,7 +86,7 @@
         status_code: 200
       register: pd_leader_info
     - set_fact:
-        pd_leader: "{{ pd_leader_info.json | json_query('client_urls') | regex_replace('^.*//(\\d+.\\d+.\\d+.\\d+:\\d+).*$', '\\1') }}"
+        pd_leader: "{{ pd_leader_info.json | json_query('client_urls') | regex_replace('^.*//(.*:\\d+).*$', '\\1') }}"
     - name: Get pd follower list
       add_host:
         name: "{{ ansible_host }}"
@@ -94,6 +94,7 @@
         pd_client_port: "{{ pd_client_port }}"
         deploy_dir: "{{ deploy_dir }}"
         pd_peer_port: "{{ pd_peer_port }}"
+        ipv4: "{{ ipv4 }}"
       when: ansible_host not in pd_leader
     - name: Get pd leader list
       add_host:
@@ -102,6 +103,7 @@
         pd_client_port: "{{ pd_client_port }}"
         deploy_dir: "{{ deploy_dir }}"
         pd_peer_port: "{{ pd_peer_port }}"
+        ipv4: "{{ ipv4 }}"
       when: ansible_host in pd_leader
 
 - name: rolling update PD cluster
@@ -289,68 +291,6 @@
         msg: "tikv binary or docker pid: {{ new_tikv_pid.stdout }}"
 
     - include_tasks: "common_tasks/remove_evict_leader_scheduler.yml"
-
-
-- name: rolling update pump cluster
-  hosts: pump_servers
-  any_errors_fatal: true
-  serial: 1
-  tags:
-    - pump
-
-  pre_tasks:
-    - name: stop pump by supervise
-      shell: cd {{ deploy_dir }}/scripts && ./stop_{{ item }}.sh
-      with_items:
-        - pump
-      when:
-        - enable_binlog|default(false)
-        - process_supervision == 'supervise'
-
-    - name: stop pump by systemd
-      systemd: name=pump-{{ pump_port }}.service state=stopped
-      become: true
-      when:
-        - enable_binlog|default(false)
-        - process_supervision == 'systemd'
-
-    - name: wait until the pump port is down
-      wait_for:
-        host: "{{ ansible_host }}"
-        port: "{{ pump_port }}"
-        state: stopped
-        msg: "the pump port {{ pump_port }} is not down"
-      when:
-        - enable_binlog|default(false)
-
-  roles:
-    - { role: pump, when: enable_binlog|default(false) }
-
-  post_tasks:
-    - name: start pump by supervise
-      shell: cd {{ deploy_dir }}/scripts && ./start_{{ item }}.sh
-      when:
-        - enable_binlog|default(false)
-        - process_supervision == 'supervise'
-      with_items:
-        - pump
-
-    - name: start pump by systemd
-      systemd: name=pump-{{ pump_port }}.service state=started
-      become: true
-      when:
-        - enable_binlog|default(false)
-        - process_supervision == 'systemd'
-
-    - name: wait until the pump port is up
-      wait_for:
-        host: "{{ ansible_host }}"
-        port: "{{ pump_port }}"
-        state: started
-        msg: "the pump port {{ pump_port }} is not up"
-      when:
-        - enable_binlog|default(false)
-
 
 - name: rolling update TiDB cluster
   hosts: tidb_servers

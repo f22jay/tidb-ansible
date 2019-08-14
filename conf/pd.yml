@@ -31,7 +31,7 @@ log:
     # max log file size in MB
     # max-size: 300
     # max log file keep days
-    # max-days: 28
+    max-days: 29
     # maximum number of old log files to retain
     # max-backups: 7
     # rotate log by day

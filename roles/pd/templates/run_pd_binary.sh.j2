@@ -9,7 +9,6 @@ DEPLOY_DIR={{ deploy_dir }}
 cd "${DEPLOY_DIR}" || exit 1
 
 {% set my_ip = hostvars[inventory_hostname].ansible_host | default(hostvars[inventory_hostname].inventory_hostname) -%}
-{% set my_ipv4 = hostvars[inventory_hostname].ipv4 -%}
 {% set my_separator = "_" %}
 {% set my_hostname = hostvars[inventory_hostname]['ansible_hostname'] | default(hostvars[inventory_hostname].inventory_hostname) -%}
 {% set my_peer_id = my_separator ~ my_hostname %}
@@ -29,9 +28,9 @@ cd "${DEPLOY_DIR}" || exit 1
 
 exec bin/pd-server \
     --name="{{ pd_name_prefix }}{{ my_peer_id }}" \
-    --client-urls="{{ pd_scheme }}://{{ my_ipv4 }}:{{ pd_client_port }}" \
+    --client-urls="{{ pd_scheme }}://{{ ipv4 }}:{{ pd_client_port }}" \
     --advertise-client-urls="{{ pd_scheme }}://{{ my_ip }}:{{ pd_client_port }}" \
-    --peer-urls="{{ pd_scheme }}://{{ my_ipv4 }}:{{ pd_peer_port }}" \
+    --peer-urls="{{ pd_scheme }}://{{ ipv4 }}:{{ pd_peer_port }}" \
     --advertise-peer-urls="{{ pd_scheme }}://{{ my_ip }}:{{ pd_peer_port }}" \
     --data-dir="{{ pd_data_dir }}" \
     --initial-cluster="{{ all_pd | join(',') }}" \
