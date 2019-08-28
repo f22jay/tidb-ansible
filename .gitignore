@@ -6,3 +6,6 @@ fact_files/
 .vagrant/
 *.pyc
 .vscode
+
+conf/binary_packages.yml
+conf/common_packages.yml
